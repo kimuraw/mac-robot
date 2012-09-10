@@ -46,6 +46,34 @@ module Mac
       keyboard_event(keycode, 0)
     end
 
+    def scroll_wheel(args = {})
+      # default values
+      scroll_y = 0
+      scroll_x = 0
+      scroll_z = 0
+      unit = :pixel
+
+      args.each do |key, value|
+	case key
+	when :up
+	  scroll_y += value
+	when :down
+	  scroll_y -= value
+	when :left
+	  scroll_x += value
+	when :right
+	  scroll_x -= value
+	when :front, :back
+	  warn "direction `#{key.to_s}' is not implemented."
+	  # TODO: not implemented. positive value means front or back?
+	when :unit
+	  unit = value
+	end
+      end
+
+      scroll_wheel_event(unit, scroll_y, scroll_x, scroll_z)
+    end
+
     def get_pixel_color(x, y)
       raise OutOfResolution if x < 0 || y < 0
       raise OutOfResolution if display_pixel_size.width < x || display_pixel_size.height < y
@@ -62,6 +90,11 @@ module Mac
 
     def mouse_event(button, type)
       @dispatcher.dispatchMouseEvent(@x, @y, BUTTONS[button], type)
+    end
+
+    def scroll_wheel_event(unit, scroll_y, scroll_x = 0, scroll_z = 0)
+      wheel_count = 3
+      @dispatcher.dispatchScrollWheelEvent(unit, wheel_count, scroll_y, scroll_x, scroll_z)
     end
 
     def keyboard_event(keycode, keydown)
