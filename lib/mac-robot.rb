@@ -54,21 +54,21 @@ module Mac
       unit = :pixel
 
       args.each do |key, value|
-	case key
-	when :up
-	  scroll_y += value
-	when :down
-	  scroll_y -= value
-	when :left
-	  scroll_x += value
-	when :right
-	  scroll_x -= value
-	when :front, :back
-	  warn "direction `#{key.to_s}' is not implemented."
-	  # TODO: not implemented. positive value means front or back?
-	when :unit
-	  unit = value
-	end
+        case key
+        when :up
+          scroll_y += value
+        when :down
+          scroll_y -= value
+        when :left
+          scroll_x += value
+        when :right
+          scroll_x -= value
+        when :front, :back
+          warn "direction `#{key.to_s}' is not implemented."
+          # TODO: not implemented. positive value means front or back?
+        when :unit
+          unit = value
+        end
       end
 
       scroll_wheel_event(unit, scroll_y, scroll_x, scroll_z)
