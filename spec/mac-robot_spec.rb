@@ -17,9 +17,10 @@ describe Mac::Robot do
 
   describe 'scroll wheel event' do
     it 'should simulate scroll wheel event' do
-      subject.scroll_wheel(:up => 10)
-      subject.scroll_wheel(:down => 10, :right => 20)
-      subject.scroll_wheel(:left => 5, :unit => :line)
+      subject.scroll_wheel_line(:up => 10)
+      subject.scroll_wheel(:down => 10)
+      subject.scroll_wheel_pixel(:right => 10, :down => 20)
+      subject.scroll_wheel_pixel(:up => 20, :left => 10)
     end
   end
 

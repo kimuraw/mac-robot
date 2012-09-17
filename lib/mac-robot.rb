@@ -46,32 +46,13 @@ module Mac
       keyboard_event(keycode, 0)
     end
 
-    def scroll_wheel(args = {})
-      # default values
-      scroll_y = 0
-      scroll_x = 0
-      scroll_z = 0
-      unit = :pixel
+    def scroll_wheel_line(args = {})
+      scroll_wheel_event(:line, *scroll_count_extract(args))
+    end
+    alias scroll_wheel scroll_wheel_line
 
-      args.each do |key, value|
-        case key
-        when :up
-          scroll_y += value
-        when :down
-          scroll_y -= value
-        when :left
-          scroll_x += value
-        when :right
-          scroll_x -= value
-        when :front, :back
-          warn "direction `#{key.to_s}' is not implemented."
-          # TODO: not implemented. positive value means front or back?
-        when :unit
-          unit = value
-        end
-      end
-
-      scroll_wheel_event(unit, scroll_y, scroll_x, scroll_z)
+    def scroll_wheel_pixel(args = {})
+      scroll_wheel_event(:pixel, *scroll_count_extract(args))
     end
 
     def get_pixel_color(x, y)
@@ -95,6 +76,31 @@ module Mac
     def scroll_wheel_event(unit, scroll_y, scroll_x = 0, scroll_z = 0)
       wheel_count = 3
       @dispatcher.dispatchScrollWheelEvent(unit, wheel_count, scroll_y, scroll_x, scroll_z)
+    end
+
+    def scroll_count_extract(args = {})
+      # default values
+      scroll_y = 0
+      scroll_x = 0
+      scroll_z = 0
+
+      args.each do |key, value|
+        case key
+        when :up
+          scroll_y += value
+        when :down
+          scroll_y -= value
+        when :left
+          scroll_x += value
+        when :right
+          scroll_x -= value
+        when :front, :back
+          warn "direction `#{key.to_s}' is not implemented."
+          # TODO: not implemented. positive value means front or back?
+        end
+      end
+
+      return [scroll_y, scroll_x, scroll_z]
     end
 
     def keyboard_event(keycode, keydown)
